@@ -28,15 +28,25 @@ class CalculatorController extends AbstractController
     public function calc(int $numberOne, int $numberTwo, Request $request): JsonResponse
     {
         $mathSign = $request->get('mathSign') ?? '';
-        try {
+        //try {
             if (!array_key_exists($mathSign, $this->mathSigns)) {
-                throw new MathSignException($mathSign);
+                //throw new MathSignException($mathSign);
+                return new JsonResponse('This sign is not valid', Response::HTTP_BAD_REQUEST);
             }
 
             $result = $this->calculatorService->calculate($numberOne, $numberTwo, $this->mathSigns[$mathSign]);
-        } catch (InvalidArgumentException|MathSignException $exception) {
-            return new JsonResponse(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
-        }
+//        } catch (InvalidArgumentException|MathSignException $exception) {
+//            return new JsonResponse(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+//        }
+        return new JsonResponse($result, Response::HTTP_OK);
+    }
+
+    #[Route('/calc/{expr}', name: 'calc', methods: ['GET'])]
+    public function simpleCalc(string $expr): JsonResponse
+    {
+        $result = '';
+        eval('$result = $expr;');
+
         return new JsonResponse($result, Response::HTTP_OK);
     }
 }
