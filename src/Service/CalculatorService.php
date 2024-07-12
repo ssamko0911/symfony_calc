@@ -29,7 +29,7 @@ class CalculatorService
         return $numberOne / $numberTwo;
     }
 
-    public function calculate(int $numberOne, int $numberTwo, string $mathSign): int
+    public function calculate(int $numberOne, int $numberTwo, string $mathSign): int // Operation;
     {
         $actionName = 'calculate' . ucfirst($mathSign);
         return $this->$actionName($numberOne, $numberTwo);
