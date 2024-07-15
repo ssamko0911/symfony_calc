@@ -2,36 +2,21 @@
 
 namespace App\Service;
 
-use InvalidArgumentException;
+use App\Entity\CalculatorResult;
+use App\Enum\Operation;
 
 class CalculatorService
 {
-    private function calculateAdd(int $numberOne, int $numberTwo): int
+    public function calculate(int $numberOne, int $numberTwo, Operation $mathSign): CalculatorResult
     {
-        return $numberOne + $numberTwo;
-    }
+        $result = match ($mathSign) {
+            Operation::ADD => $numberOne + $numberTwo,
+            Operation::SUB => $numberOne - $numberTwo,
+            Operation::MUL => $numberOne * $numberTwo,
+            Operation::DIV => $numberOne / $numberTwo,
+            default => 0,
+        };
 
-    private function calculateSub(int $numberOne, int $numberTwo): int
-    {
-        return $numberOne - $numberTwo;
-    }
-
-    private function calculateMul(int $numberOne, int $numberTwo): int
-    {
-        return $numberOne * $numberTwo;
-    }
-
-    private function calculateDiv(int $numberOne, int $numberTwo): int
-    {
-        if ($numberTwo === 0) {
-            throw new InvalidArgumentException('Division by zero');
-        }
-        return $numberOne / $numberTwo;
-    }
-
-    public function calculate(int $numberOne, int $numberTwo, string $mathSign): int // Operation;
-    {
-        $actionName = 'calculate' . ucfirst($mathSign);
-        return $this->$actionName($numberOne, $numberTwo);
+        return new CalculatorResult($result);
     }
 }
