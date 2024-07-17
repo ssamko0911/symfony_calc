@@ -2,15 +2,22 @@
 
 namespace App\Service;
 
-use InvalidArgumentException;
+use App\Enum\Operation;
+use App\Request\CalculatorPayloadRequest;
 
 class CalculatorService
 {
-    public static function calculate($numberOne, $numberTwo): int
+    public function calculate(CalculatorPayloadRequest $request): float
     {
-        if ($numberTwo === 0) {
-            throw new InvalidArgumentException('Division by zero');
-        }
-        return $numberOne / $numberTwo;
+        $numberOne = $request->operandOne;
+        $numberTwo = $request->operandTwo;
+        $mathSign = $request->operation;
+
+        return match ($mathSign) {
+            Operation::ADD => $numberOne + $numberTwo,
+            Operation::SUB => $numberOne - $numberTwo,
+            Operation::MUL => $numberOne * $numberTwo,
+            Operation::DIV => $numberOne / $numberTwo,
+        };
     }
 }
